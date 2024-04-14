@@ -1,0 +1,16 @@
+Metadata-Version: 1.1
+Name: lmstudio_api
+Version: 1.0.1
+Summary: AI api
+Home-page: https://lmstudio.com
+Author: lmstudi0
+Author-email: yepmeagainplsnoban@gmail.com
+License: MIT
+Description: lmstudio Official AI bot api
+Keywords: lmstudio
+Platform: UNKNOWN
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Intended Audience :: Education
+Classifier: Operating System :: Microsoft :: Windows :: Windows 10
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3
