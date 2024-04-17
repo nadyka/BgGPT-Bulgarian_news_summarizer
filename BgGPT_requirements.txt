@@ -1,6 +1,8 @@
 PERVASIVE REQT: Preserve your data at each step
 
-Start with 1 news source; 
+BgGPT News Summarizer Project Requirements Description
+
+Start with 1 news source; https://www.mediapool.bg/news/ (Bulgarian news site)
 
 1) Retrieve the 10 most recent news articles.
 
@@ -49,6 +51,9 @@ add more data sources
 
 MVP v3
 count popularity of topics (as reflected in clickbait titles) 
+Olena's idea:
+add a function that remembers topics that interest a person, in order to subsequently show him the top 10 popular news and 3-4 news (separately) exactly on those topics that people are most often interested in
+
 
 MVP 4 or 5 
 Semantic Analysis:
