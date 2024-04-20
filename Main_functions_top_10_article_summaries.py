@@ -59,7 +59,7 @@ def fetch_news(url):
                 link = a_tag['href']
                 summary = "Накратко... " + title  # Placeholder for actual summarization
                 sanitized_title = sanitize_title(title)
-                articles.append({"Title": title, "Link": link, "Summary": summary})
+                articles.append({"title": title, "link": link, "summary": summary})
                 
                 # Save to SQLite DB
                 with sqlite3.connect(DATABASE_NAME) as conn:
@@ -142,9 +142,11 @@ def display_articles(articles):
                     st.write(f"Прочетете повече: [link]({row['link']})")
                     
 # Retrieve and Display Function for APScheduler
+# Retrieve and Display Function for APScheduler
 def retrieve_and_display_articles():
     articles = fetch_news(URL)
-    display_articles(articles)
+    if articles:  # Check if the list is not empty
+        display_articles(articles)
 
 # Streamlit App Layout
 def main():

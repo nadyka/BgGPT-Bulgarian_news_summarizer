@@ -1,5 +1,7 @@
 PERVASIVE REQT: Preserve your data at each step
 
+Create a Pythonic script for the following application, by using more descriptive function and variable names, and by adding docstrings to each function.
+
 BgGPT News Summarizer Project Requirements Description
 
 Start with 1 news source; https://www.mediapool.bg/news/ (Bulgarian news site)
@@ -11,7 +13,7 @@ Start with 1 news source; https://www.mediapool.bg/news/ (Bulgarian news site)
 	Ask BgGPT to summarize the article
 	Save the summary locally in text or HTML
 
-3) Present the 10 news articles in Streamlit GUI
+3) Present the top ten news articles as sorted out on the main news page by the media editors in Streamlit GUI
 
 4) Retrieve at 7:00h UTC+3 and again in 12 hours at 19:00h UTC+3
 
