@@ -1,0 +1,38 @@
+Please write a python function that extracts all URL records in a sitemap file in XML format.  The function should return a JSON object of URL records.
+
+Then create another function that converts the JSON object to Python dictionary a pandas dataframe named article_url_records. The dataframe should have the following columns: news_article_url, news_article_title, news_publication_date, news_source_name, news_source_language. The function should return the dataframe.
+
+Use the xml file below as a test input: Mediapool_sitemap_main_gz_file\sitemap-today.xml. 
+
+{{Input object data structure}}: 
+
+here is an example input xml object :
+ <url>
+  <loc>https://www.mediapool.bg/kucheto-izyade-razsledvaneto-a-koruptsiyata-specheli-kampaniyata-news358030.html</loc>
+  <news:news>
+   <news:title>Кучето изяде разследването. А корупцията спечели кампанията</news:title>
+   <news:publication_date>2024-04-10</news:publication_date>
+   <news:publication>
+    <news:name>Mediapool.bg</news:name>
+    <news:language>bg</news:language>
+   </news:publication>
+  </news:news>
+ </url>
+
+{{Output object data structure}}: 
+
+<news_article_url>
+<news_article_title>
+<news_publication_date>
+<news_source_name>
+<news_source_language>
+
+mapping of source data fields to dataframe columns:
+<loc> ==> news_article_url
+<news:title> ==> news_article_title
+<news:publication_date> ==> news_publication_date
+<news:name> ==> news_source_name
+<news:language> ==> news_source_language
+
+Write another function that counts the length of each URL and adds it to the second column of the dataframe.
+
