@@ -1,0 +1,6 @@
+get a dataframe of uniquely identified articles, titles, publication date, url that can be a good primary key which will contain 4-5 fields,
+primary key can use 2 columns for the master index.
+date, primary source, name.
+Dataframe can be pushed directly into the DB. In the same table or in another table for the full article content - HTML file, MongoDB?
+SQlite?
+to store the complete response coming from the get request - html object stored in the table with reference to the article content table.
