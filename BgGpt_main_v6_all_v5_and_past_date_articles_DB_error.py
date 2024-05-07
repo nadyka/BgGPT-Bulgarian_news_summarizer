@@ -35,7 +35,7 @@ def sanitize_title(title):
 
 def setup_database():
     with sqlite3.connect(DATABASE_NAME) as conn:
-        # Create the table if it doesn't exist
+        # Create the data and table(s) if they don't aleady exist
         conn.execute("""
             CREATE TABLE IF NOT EXISTS articles (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -44,14 +44,14 @@ def setup_database():
                 summary TEXT,
                 views INTEGER,
                 retrieval_date DATETIME,
-                date_of_publication DATE
+                publication_date DATETIME
             )
         """)
-        # Add the date_of_publication column if it doesn't exist
+        # Add the publication_date column if it doesn't exist
         # try:
         #     conn.execute("""
         #         ALTER TABLE articles
-        #         ADD COLUMN IF NOT EXISTS date_of_publication DATE
+        #         ADD COLUMN IF NOT EXISTS publication_date DATE
         #     """)
         # except sqlite3.OperationalError:
         #     pass  # Ignore the error if the column already exists
@@ -59,13 +59,14 @@ def setup_database():
         conn.commit()
 
 def column_exists(conn, table_name, column_name):
+    """Add description here."""
     cursor = conn.cursor()
     cursor.execute(f"PRAGMA table_info({table_name})")
     columns = [column[1] for column in cursor.fetchall()]
     return column_name in columns
 
 def fetch_news(articles_folderpath):
-    # Define the user agents
+    # Define the browser user agents
     user_agents = {
         'firefox': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101 Firefox/91.0',
         'chrome': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36',
@@ -120,10 +121,11 @@ def save_articles_to_db(soup):
             for item in news_items:
                 a_tag = item.find('a')
                 if a_tag and a_tag['href']:
-                    title, summary, date_of_publication = extract_title_and_summary(a_tag['href'])
+                    title, summary, publication_date = extract_title_and_summary(a_tag['href'])
+                    print(f"title, summary, publication_date: {extract_title_and_summary(a_tag['href'])}")
                     views = randint(1, 100)
-                    conn.execute("INSERT INTO articles (title, link, summary, views, retrieval_date, date_of_publication) VALUES (?, ?, ?, ?, ?, ?)",
-                                 (title, a_tag['href'], summary, views, datetime.datetime.now(), date_of_publication))
+                    conn.execute("INSERT INTO articles (publication_date, title, link, summary, views, retrieval_date) VALUES (?, ?, ?, ?, ?, ?)",
+                                 (publication_date, title, a_tag['href'], summary, views, datetime.datetime.now()))
             conn.commit()
             save_results()  # Call to save results after fetching news
     except Exception as e:
@@ -145,11 +147,12 @@ def extract_title_and_summary(url):
             time_tag = soup.find('time', class_="u-highlight-insignificant u-compact-font c-site-content__header-item")
             if time_tag and 'datetime' in time_tag.attrs:
                 # Parse the datetime string to a datetime object
-                date_of_publication = datetime.datetime.strptime(time_tag['datetime'], "%Y-%m-%dT%H:%M:%S%z").date()
+                #publication_date = datetime.datetime.strptime(time_tag['datetime'], "%Y-%m-%dT%H:%M:%S%z").date()
+                publication_date = datetime.datetime.strptime(time_tag['datetime'], "%Y-%m-%dT%H:%M:%S%z")
             else:
-                date_of_publication = datetime.date.today()
+                publication_date = datetime.date.today()
 
-            return title, summary, date_of_publication
+            return title, summary, publication_date
     except Exception as e:
         return "Failed to extract", str(e), datetime.date.today()
 
@@ -170,6 +173,7 @@ def save_results():
     # Save to .html file
     html_filename = os.path.join(results_path, 'articles.html')
     articles.to_html(html_filename, index=False, encoding='utf-8')
+    return print(f"Articles saved to {html_filename})")
 
 
 # def get_popular_articles(selected_date):
@@ -216,17 +220,9 @@ def display_articles():
             soup = parse_and_save_soup(response, soup_filepath)
             if soup is not None:
                 save_articles_to_db(soup)
-
-
-    # popular_articles = get_popular_articles(selected_date)
-    # if not popular_articles.empty:
-    #     st.sidebar.write(f"Most Popular Articles for {selected_date}:")
-    #     for index, row in popular_articles.iterrows():
-    #         st.sidebar.write(f"{row['title']} - {row['link']}")
-
        # Display articles for the selected date
     with sqlite3.connect(DATABASE_NAME) as conn:
-        articles_for_selected_date = pd.read_sql("SELECT title, link, summary FROM articles WHERE date(date_of_publication) = ?", conn, params=(selected_date,))
+        articles_for_selected_date = pd.read_sql("SELECT title, link, summary FROM articles WHERE publication_date = ?", conn, params=(selected_date,))
     if not articles_for_selected_date.empty:
         articles_for_selected_date.index = range(1, len(articles_for_selected_date) + 1)
         selected_article = st.sidebar.selectbox('Select an article', articles_for_selected_date['title'])
